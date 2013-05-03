@@ -106,69 +106,69 @@ public class LoadMarsWeatherXML : MonoBehaviour
 		WeatherData.SendMessage("GetSunrise", MarsWeather1.sunrise.ToString());
 		WeatherData.SendMessage("GetSunset", MarsWeather1.sunset.ToString());
 		
-		Debug.Log(MarsWeather1.sunrise.ToString() + "::EQUALS::" + System.DateTime.Now.Hour.ToString());
+		//Debug.Log(MarsWeather1.sunrise.ToString() + "::EQUALS::" + System.DateTime.Now.Hour.ToString());
 		
-		
-		int SunriseValue = returnTimeValue(MarsWeather1.sunrise.ToString());
-		int SunsetValue = returnTimeValue(MarsWeather1.sunset.ToString());
-		
-		//sun is up
-		if(System.DateTime.UtcNow.Hour > SunriseValue && System.DateTime.UtcNow.Hour < SunsetValue && !itIsNight){
-			GameObject Light1 = GameObject.Find("Directional light1");
-			Light1.light.intensity = 0.62f;
-			GameObject Light2 = GameObject.Find("Directional light2");
-			Light2.light.intensity = 0.46f;
-			GameObject Light3 = GameObject.Find("Directional light3");
-			Light3.light.intensity = 0.69f;
-		}
-		//sun set or sun rise is going on == slightly darker scene
-		else if((System.DateTime.UtcNow.Hour == SunriseValue || System.DateTime.UtcNow.Hour == SunsetValue) && !itIsNight){
-			GameObject Light1 = GameObject.Find("Directional light1");
-			Light1.light.intensity = 0.4f;
-			GameObject Light2 = GameObject.Find("Directional light2");
-			Light2.light.intensity = 0.4f;
-			GameObject Light3 = GameObject.Find("Directional light3");
-			Light3.light.intensity = 0.4f;
-		}
-		//darken scene if the sun is down
-		else{
-			GameObject Light1 = GameObject.Find("Directional light1");
-			Light1.light.intensity = 0.2f;
-			GameObject Light2 = GameObject.Find("Directional light2");
-			Light2.light.intensity = 0.2f;
-			GameObject Light3 = GameObject.Find("Directional light3");
-			Light3.light.intensity = 0.2f;
+		//checking to make sure the values exist
+		if(MarsWeather1.sunrise.ToString() != null && !MarsWeather1.sunset.ToString().Contains("--") && MarsWeather1.sunset.ToString() != null && !MarsWeather1.sunrise.ToString().Contains("--")){
+			int SunriseValue = returnTimeValue(MarsWeather1.sunrise.ToString());
+			int SunsetValue = returnTimeValue(MarsWeather1.sunset.ToString());
 			
-			GameObject MoveScript = GameObject.Find("Scripts");
-			MoveScript.SendMessage("isNightButtonOn", true);
-			
-			
+			//sun is up
+			if(System.DateTime.UtcNow.Hour > SunriseValue && System.DateTime.UtcNow.Hour < SunsetValue && !itIsNight){
+				GameObject Light1 = GameObject.Find("Directional light1");
+				Light1.light.intensity = 0.62f;
+				GameObject Light2 = GameObject.Find("Directional light2");
+				Light2.light.intensity = 0.46f;
+				GameObject Light3 = GameObject.Find("Directional light3");
+				Light3.light.intensity = 0.69f;
+			}
+			//sun set or sun rise is going on == slightly darker scene
+			else if((System.DateTime.UtcNow.Hour == SunriseValue || System.DateTime.UtcNow.Hour == SunsetValue) && !itIsNight){
+				GameObject Light1 = GameObject.Find("Directional light1");
+				Light1.light.intensity = 0.4f;
+				GameObject Light2 = GameObject.Find("Directional light2");
+				Light2.light.intensity = 0.4f;
+				GameObject Light3 = GameObject.Find("Directional light3");
+				Light3.light.intensity = 0.4f;
+			}
+			//darken scene if the sun is down
+			else{
+				GameObject Light1 = GameObject.Find("Directional light1");
+				Light1.light.intensity = 0.2f;
+				GameObject Light2 = GameObject.Find("Directional light2");
+				Light2.light.intensity = 0.2f;
+				GameObject Light3 = GameObject.Find("Directional light3");
+				Light3.light.intensity = 0.2f;
 				
-		
-	   
+				GameObject MoveScript = GameObject.Find("Scripts");
+				MoveScript.SendMessage("isNightButtonOn", true);
+			}
 		}
+		
 		GameObject MarsWindDust = GameObject.Find("MarsDustStorm");
 		//blow wind if the wind speed is up
 		//kind of windy (dusty)
-		if(int.Parse(MarsWeather1.wind_speed.ToString()) > 8 && int.Parse(MarsWeather1.wind_speed.ToString()) < 25 || itIsWindy){
-			MarsWindDust.particleEmitter.emit = true;
-			MarsWindDust.particleEmitter.maxEnergy = 25;
-			
-			GameObject MoveScript = GameObject.Find("Scripts");
-			MoveScript.SendMessage("isWindButtonOn", true);
-		}
-		//really windy (dusty)
-		else if(int.Parse(MarsWeather1.wind_speed.ToString()) >= 20){
-			MarsWindDust.particleEmitter.emit = true;
-			MarsWindDust.particleEmitter.maxEnergy = 45;
-			
-			GameObject MoveScript = GameObject.Find("Scripts");
-			MoveScript.SendMessage("isWindButtonOn", true);
-		}
-		//not windy (dusty)
-		else{
-			MarsWindDust.particleEmitter.emit = true;
-			MarsWindDust.particleEmitter.maxEnergy = 6;
+		if(MarsWeather1.wind_speed.ToString() != null && !MarsWeather1.wind_speed.ToString().Contains("--")){
+			if(int.Parse(MarsWeather1.wind_speed.ToString()) > 8 && int.Parse(MarsWeather1.wind_speed.ToString()) < 25 || itIsWindy){
+				MarsWindDust.particleEmitter.emit = true;
+				MarsWindDust.particleEmitter.maxEnergy = 25;
+				
+				GameObject MoveScript = GameObject.Find("Scripts");
+				MoveScript.SendMessage("isWindButtonOn", true);
+			}
+			//really windy (dusty)
+			else if(int.Parse(MarsWeather1.wind_speed.ToString()) >= 20){
+				MarsWindDust.particleEmitter.emit = true;
+				MarsWindDust.particleEmitter.maxEnergy = 45;
+				
+				GameObject MoveScript = GameObject.Find("Scripts");
+				MoveScript.SendMessage("isWindButtonOn", true);
+			}
+			//not windy (dusty)
+			else{
+				MarsWindDust.particleEmitter.emit = false;
+				MarsWindDust.particleEmitter.maxEnergy = 3;
+			}
 		}
 		//remove default tint the screen if it is "Sunny"
 		//Debug.Log(MarsWeather1.atmo_opacity.ToString());
@@ -185,6 +185,7 @@ public class LoadMarsWeatherXML : MonoBehaviour
 			MoveScript.SendMessage("isHazeButtonOn", true);
 		}
 	}
+	
 	int returnTimeValue(string timeString)
 	{
 		int timeInt;
@@ -213,9 +214,13 @@ public class LoadMarsWeatherXML : MonoBehaviour
 			MarsWindDust.particleEmitter.maxEnergy = 45;
 		}
 		else{
-			MarsWindDust.particleEmitter.emit = true;
-			MarsWindDust.particleEmitter.maxEnergy = 6;
+			MarsWindDust.particleEmitter.emit = false;
+			MarsWindDust.particleEmitter.maxEnergy = 3;
 		}
+		
+		
+		GameObject RoverMoveScript = GameObject.Find("Scripts");
+		RoverMoveScript.SendMessage("toggleMoveScript", true);
 	}
 	public void toggleHaze(bool hazy){
 		if(hazy){
@@ -226,6 +231,9 @@ public class LoadMarsWeatherXML : MonoBehaviour
 			GameObject GUIScript = GameObject.Find("Scripts");
 			GUIScript.SendMessage("isItSunnyToggle", true);
 		}
+		
+		GameObject RoverMoveScript = GameObject.Find("Scripts");
+		RoverMoveScript.SendMessage("toggleMoveScript", true);
 
 	}
 	public void toggleNight(bool night){
@@ -246,5 +254,7 @@ public class LoadMarsWeatherXML : MonoBehaviour
 			Light3.light.intensity = 0.69f;
 		}
 		
+		GameObject RoverMoveScript = GameObject.Find("Scripts");
+		RoverMoveScript.SendMessage("toggleMoveScript", true);
 	}
 }

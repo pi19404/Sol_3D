@@ -110,16 +110,12 @@ public class touchPointC : MonoBehaviour  {
 					}
 	        }
 	    }
-		//if it is on dollar mode the initial set up will not be captured because I don't want it to reposition the rover on load
-		/*if(!dollarModeLocal){
-			
-		}*/
+
 		targetItem.transform.position = Vector3.Lerp(startPoint, planePoint, (Time.time - startTime) / duration);
 		}
 	}
 	void toggleMoveScript(bool isActive){
-		TargetActive = isActive;
-		
+		TargetActive = isActive;	
 		//Debug.Log("TARGET ACTIVE = " + TargetActive);
 	}/*
 	void dollarStartMode(bool dollarMode){

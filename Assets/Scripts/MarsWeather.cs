@@ -6,7 +6,7 @@ class MarsWeather
     public string title;
     public string sol;
 	public string terrestrial_date;
-    public ArrayList magnitudes;
+    //public ArrayList magnitudes;
     public string min_temp;
 	public string max_temp;
 	public string pressure;

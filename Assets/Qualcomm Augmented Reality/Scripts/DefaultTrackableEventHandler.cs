@@ -87,7 +87,14 @@ public class DefaultTrackableEventHandler : MonoBehaviour,
 		if(mTrackableBehaviour.name == "FrameMarker1"){
 				GameObject MarsPlanet = GameObject.Find("MarsWrapper");
 			    MarsPlanet.animation.Play("Planet");
-			}
+			
+				GameObject screenFilm = GameObject.Find("Scripts");
+				screenFilm.SendMessage("showingMars", true);
+		}
+		else{
+			GameObject screenFilm = GameObject.Find("Scripts");
+			screenFilm.SendMessage("showingMars", false);
+		}
 		
 		//Make sure the instruction screen is not showing
 		GameObject GUIScript = GameObject.Find("Scripts");

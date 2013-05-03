@@ -57,21 +57,17 @@ public class InstructionalScreen : MonoBehaviour
 	
     private bool mShowScreen = true;
 	private bool itsSunny = false;
+	private bool isItMarsPlanet = false;
 
     #endregion // PRIVATE_MEMBER_VARIABLES
-
 
 
     #region UNITY_MONOBEHAVIOUR_METHODS
 
     void Start()
     {
-        // Disable the VideoPlaybackController to prevent touches through this screen
-
-        mButtonStyle = new GUIStyle();
-
         
-		// iPhone5
+		/*// iPhone5
             if (Screen.width <= 640 && Screen.height > 1000)
             {
                 mText = iPhone5;
@@ -84,20 +80,28 @@ public class InstructionalScreen : MonoBehaviour
                DataBG = iPhone_DataBG;
             }//iPads
             else
-            {
+            {*/
                 mText = iPad;
                 DataBG = iPad_DataBG;
-			}
+			//}
 
         // The text box should fill the width of the screen
         float textWidth = Screen.width;
 		float textHeight = Screen.height;
 		
-		mailButtonRect = new Rect(565,1192, 480, 60);
-        mTextRect = new Rect(0, 0, textWidth, textHeight);
-		colorOverlayBGRect = new Rect(0, 0, Screen.width, Screen.height);
-		dataBGRect = new Rect(0, 1648, Screen.width, 399);
-
+		if(Screen.height < 2000)
+		{
+			mailButtonRect = new Rect(282,596, 240, 30);
+	        mTextRect = new Rect(0, 0, textWidth, textHeight);
+			colorOverlayBGRect = new Rect(0, 0, Screen.width, Screen.height);
+			dataBGRect = new Rect(0, 824, Screen.width, 200);
+		}
+		else{
+			mailButtonRect = new Rect(565,1192, 480, 60);
+	        mTextRect = new Rect(0, 0, textWidth, textHeight);
+			colorOverlayBGRect = new Rect(0, 0, Screen.width, Screen.height);
+			dataBGRect = new Rect(0, 1648, Screen.width, 399);
+		}
 
     }
 
@@ -114,12 +118,17 @@ public class InstructionalScreen : MonoBehaviour
 
     void OnGUI()
     {
+		if(Screen.height < 2000)
+		{
+			AutoResize(768, 1024);
+		}
+		
 		//use the tan color overlay if the atmosphere is sunny
 		if(!itsSunny){
 			GUI.DrawTexture(colorOverlayBGRect, colorOverlay_hazy, ScaleMode.StretchToFill, true, 0);
 		}
 		//use the less opaque tan color overlay if the atmosphere is NOT sunny
-		else{
+		if(!isItMarsPlanet){
 			GUI.DrawTexture(colorOverlayBGRect, colorOverlay, ScaleMode.StretchToFill, true, 0);
 		}
 		//show the help screen if the marker is not found
@@ -141,6 +150,14 @@ public class InstructionalScreen : MonoBehaviour
 	
 	public void isItSunnyToggle(bool isItSunny){
 		 itsSunny = isItSunny;
+	}
+	public void showingMars(bool isItMars){
+		 isItMarsPlanet = isItMars;
+	}
+	public static void AutoResize(int screenWidth, int screenHeight)
+	{
+	    Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
+	    GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x, resizeRatio.y, 1.0f));
 	}
     #endregion // UNITY_MONOBEHAVIOUR_METHODS
 }
